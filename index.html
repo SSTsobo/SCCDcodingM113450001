@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>tamsuiheartbreakwauwau — WinXP UI</title>
+
+    <link rel="stylesheet" href="Style.css" />
+  </head>
+  <body>
+    <nav class="taskbar">
+      <button id="startBtn" class="start-btn">
+        <span class="start-icon">
+          <img src="./assets/icons/xp-logo.png" alt="Windows XP logo" />
+        </span>
+        Start
+      </button>
+
+      <div class="taskbar-apps">
+        <span class="task-icon"
+          ><img src="./assets/icons/notepad.webp" alt="Notepad icon"
+        /></span>
+        <span class="task-icon"
+          ><img src="./assets/icons/ie.png" alt="Internet Explorer icon"
+        /></span>
+      </div>
+    </nav>
+
+    <div id="startPanel" class="start-panel">
+      <div class="panel-header">
+        <div class="avatar">
+          <img src="./assets/img/avatar.png" alt="Avatar" />
+        </div>
+        <h1 class="title">tamsuiheartbreakwauwau</h1>
+      </div>
+
+      <div class="panel-list">
+        <a id="openAbout" class="panel-item" href="#about">
+          <img
+            class="icon-img"
+            src="./assets/icons/about.png"
+            alt="About icon"
+          />
+          <div class="label">About Me</div>
+        </a>
+
+        <a id="openWorks" class="panel-item" href="#">
+          <img
+            class="icon-img"
+            src="./assets/icons/works.webp"
+            alt="Works icon"
+          />
+          <div class="label">WORKS</div>
+        </a>
+
+        <a
+          class="panel-item"
+          href="https://www.instagram.com/sst_sobo/"
+          target="_blank"
+          rel="noopener"
+        >
+          <img
+            class="icon-img"
+            src="./assets/icons/instagram.png"
+            alt="Instagram icon"
+          />
+          <div class="label">Instagram</div>
+        </a>
+
+        <a
+          class="panel-item"
+          href="https://open.spotify.com/playlist/29496kdcoFos571surx4vZ?si=17df3f36260e4cd6"
+          target="_blank"
+          rel="noopener"
+        >
+          <img
+            class="icon-img"
+            src="./assets/icons/songlist.png"
+            alt="Song list icon"
+          />
+          <div class="label">My song list</div>
+        </a>
+      </div>
+    </div>
+
+    <div id="worksPanel" class="start-panel">
+      <div class="panel-header">
+        <div class="avatar">
+          <img src="./assets/icons/works.webp" alt="Works avatar" />
+        </div>
+        <div class="title">WORKS</div>
+      </div>
+      <div class="panel-list">
+        <a class="panel-item work-link" href="#work1" data-work="work1">
+          <img class="icon-img" src="./assets/icons/works.webp" alt="" />
+          <div class="label">オルガ・イツカ</div>
+        </a>
+        <a class="panel-item work-link" href="#work2" data-work="work2">
+          <img class="icon-img" src="./assets/icons/works.webp" alt="" />
+          <div class="label">雪の華</div>
+        </a>
+        <a class="panel-item work-link" href="#work3" data-work="work3">
+          <img class="icon-img" src="./assets/icons/works.webp" alt="" />
+          <div class="label">キラキラ スター</div>
+        </a>
+      </div>
+    </div>
+
+    <div id="xpWindow" class="xp-window">
+      <div class="xp-titlebar">
+        <span class="xp-title">WORK</span>
+        <div class="xp-actions">
+          <button id="xpClose" class="xp-btn xp-close" aria-label="Close">
+            ×
+          </button>
+        </div>
+      </div>
+      <div id="workViewport" class="xp-content"></div>
+    </div>
+
+    <script>
+      (() => {
+        const startBtn = document.getElementById("startBtn");
+        const startPanel = document.getElementById("startPanel");
+        const worksPanel = document.getElementById("worksPanel");
+        const openWorks = document.getElementById("openWorks");
+        const openAbout = document.getElementById("openAbout");
+
+        startBtn.addEventListener("click", () => {
+          startPanel.classList.toggle("open");
+          if (!startPanel.classList.contains("open")) {
+            worksPanel.classList.remove("open");
+          }
+        });
+
+        openWorks.addEventListener("click", (e) => {
+          e.preventDefault();
+          worksPanel.classList.toggle("open");
+        });
+
+        document.addEventListener("click", (e) => {
+          const inStart =
+            startPanel.contains(e.target) || startBtn.contains(e.target);
+          const inWorks = worksPanel.contains(e.target);
+          if (!inStart && !inWorks) {
+            startPanel.classList.remove("open");
+            worksPanel.classList.remove("open");
+          }
+        });
+
+        const xpWindow = document.getElementById("xpWindow");
+        const xpTitle = xpWindow.querySelector(".xp-title");
+        const xpClose = document.getElementById("xpClose");
+        const workViewport = document.getElementById("workViewport");
+
+        function sizeXpWindowTo(w, h) {
+          const TITLE_H = 34;
+          const MARGIN = 24;
+          const maxW = Math.max(320, window.innerWidth - MARGIN * 2);
+          const maxH = Math.max(200, window.innerHeight - MARGIN * 2);
+          xpWindow.style.width = Math.min(w, maxW) + "px";
+          xpWindow.style.height = Math.min(h + TITLE_H, maxH) + "px";
+        }
+
+        const WORK_TITLES = {
+          work1: "オルガ・イツカ",
+          work2: "雪の華",
+          work3: "キラキラ スター",
+        };
+
+        function openAboutWindow(imgSrc) {
+          workViewport.innerHTML = "";
+          xpTitle.textContent = "About Me";
+          sizeXpWindowTo(640, 480);
+          xpWindow.classList.add("show");
+
+          const img = document.createElement("img");
+          img.src = imgSrc;
+          img.alt = "About image";
+          img.addEventListener("load", () => {
+            const iw = img.naturalWidth || 640;
+            const ih = img.naturalHeight || 480;
+            sizeXpWindowTo(iw, ih);
+          });
+          workViewport.appendChild(img);
+        }
+
+        openAbout.addEventListener("click", (e) => {
+          e.preventDefault();
+          openAboutWindow("./assets/img/about.jpg");
+          startPanel.classList.remove("open");
+          worksPanel.classList.remove("open");
+        });
+
+        function openWork(which) {
+          workViewport.innerHTML = "";
+          xpTitle.textContent = WORK_TITLES[which] || "WORK";
+          sizeXpWindowTo(640, 400);
+          xpWindow.classList.add("show");
+
+          const urlMap = {
+            work1: "./indexp5js01.html",
+            work2: "./indexp5js02.html",
+            work3: "./indexp5js03.html",
+          };
+
+          const iframe = document.createElement("iframe");
+          iframe.addEventListener("load", () => {
+            let tries = 0;
+            const tick = setInterval(() => {
+              tries++;
+              const doc = iframe.contentDocument;
+              const canvas = doc && doc.querySelector("canvas");
+              if (canvas) {
+                const cw = canvas.width || canvas.clientWidth || 640;
+                const ch = canvas.height || canvas.clientHeight || 400;
+                sizeXpWindowTo(cw, ch);
+                clearInterval(tick);
+              }
+              if (tries > 40) clearInterval(tick);
+            }, 50);
+          });
+          iframe.src =
+            (urlMap[which] || "./indexp5js01.html") + "?v=" + Date.now();
+          iframe.loading = "lazy";
+          workViewport.appendChild(iframe);
+        }
+
+        document.querySelectorAll(".work-link").forEach((a) => {
+          a.addEventListener("click", (e) => {
+            e.preventDefault();
+            openWork(a.dataset.work);
+            startPanel.classList.remove("open");
+            worksPanel.classList.remove("open");
+          });
+        });
+
+        xpClose.addEventListener("click", () => {
+          xpWindow.classList.remove("show");
+          workViewport.innerHTML = "";
+        });
+      })();
+    </script>
+  </body>
+</html>
